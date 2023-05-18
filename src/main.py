@@ -19,10 +19,11 @@ class Main:
         screen = self.screen
         board = chess.Board()
         dragger = self.game.dragger
-
+        
         while True:
 
             game.show_bg(screen)
+            game.show_moves(screen,board)
             game.show_pieces(screen,board)
 
             if dragger.dragging:
@@ -45,11 +46,34 @@ class Main:
                     if dragger.dragging:
                         dragger.update_mouse(event.pos)
                         game.show_bg(screen)
+                        game.show_moves(screen,board)
                         game.show_pieces(screen,board)
                         dragger.update_blit(screen, game)
         
 
                 elif event.type == pygame.MOUSEBUTTONUP:
+                    if dragger.dragging:
+
+                        ini_pos = 56+dragger.initial_col-8*dragger.initial_row
+
+                        dragger.update_mouse(event.pos)
+
+                        released_row = dragger.mouseY // SQSIZE
+                        released_col = dragger.mouseX // SQSIZE
+
+                        fin_pos = 56+released_col-8*released_row
+
+                        move = chess.Move(ini_pos, fin_pos)
+                        moves = board.legal_moves
+                        for a in moves:
+                            if move == a:
+                                board.push(move)
+
+
+
+
+
+
                     dragger.undrag_piece()
 
                 elif event.type == pygame.QUIT:

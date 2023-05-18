@@ -71,5 +71,22 @@ class Game:
             return os.path.join(f'piece_img/{size}px/white_{self.PiecesTonNum[piece.lower()]}.png')
         else:
             return os.path.join(f'piece_img/{size}px/black_{self.PiecesTonNum[piece.lower()]}.png')
-            
-            
+    
+    def show_moves(self, surface, board):
+
+        if self.dragger.dragging:
+            piece = self.dragger.piece
+            moves = board.legal_moves
+            piece_position = 56+self.dragger.initial_col-8*self.dragger.initial_row
+            # loop all valid moves
+            for move in moves:
+                if move.from_square == piece_position:
+                    col = move.to_square % 8
+                    row = 7-((move.to_square - col)//8)
+
+                    # color
+                    color = '#C86464' if (row + col) % 2 == 0 else '#C84646'
+                    # rect
+                    rect = (col * SQSIZE, row * SQSIZE, SQSIZE, SQSIZE)
+                    # blit
+                    pygame.draw.rect(surface, color, rect)
