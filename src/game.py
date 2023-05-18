@@ -16,6 +16,9 @@ class Game:
         "k": "king"
         }
        self.dragger = Dragger()
+
+       self.last_move = None
+       self.hover_square = None
   
     def show_bg(self, surface):
         for row in range(ROWS):
@@ -90,3 +93,28 @@ class Game:
                     rect = (col * SQSIZE, row * SQSIZE, SQSIZE, SQSIZE)
                     # blit
                     pygame.draw.rect(surface, color, rect)
+
+
+    def show_last_move(self, surface):
+        if self.last_move != None:
+            for move in [self.last_move.from_square,self.last_move.to_square]:
+                col = move % 8
+                row = 7-((move - col)//8)
+
+                # color
+                color = (244, 247, 116) if (row + col) % 2 == 0 else (172, 195, 51)
+                # rect
+                rect = (col * SQSIZE, row * SQSIZE, SQSIZE, SQSIZE)
+                # blit
+                pygame.draw.rect(surface, color, rect)
+
+    def show_hover(self, surface):
+        if self.hover_square != None:
+            col = self.hover_square % 8
+            row = 7-((self.hover_square - col)//8)
+            # color
+            color = (180, 180, 180)
+            # rect
+            rect = (col * SQSIZE, row * SQSIZE, SQSIZE, SQSIZE)
+            # blit
+            pygame.draw.rect(surface, color, rect, width=5)
