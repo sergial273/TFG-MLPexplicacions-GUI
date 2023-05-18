@@ -1,8 +1,8 @@
 import os
 import pygame
-import chess
 
 from const import *
+from dragger import Dragger
 
 class Game:
 
@@ -15,6 +15,7 @@ class Game:
         "q": "queen",
         "k": "king"
         }
+       self.dragger = Dragger()
   
     def show_bg(self, surface):
         for row in range(ROWS):
@@ -42,16 +43,26 @@ class Game:
         
         row = col = 0
         for elem in codifsencera1:
+            if self.dragger.dragging:
+                if not elem.isdigit() and elem != "/":
+                    if row!=self.dragger.initial_row or col != self.dragger.initial_col:
+                        img= pygame.image.load(self.get_texture(elem,size=68))
+                        img_center = col * SQSIZE + SQSIZE // 2, row * SQSIZE + SQSIZE // 2
+                        surface.blit(img,img.get_rect(center=img_center))
+                elif elem == "/":
+                    row += 1
+                    col = -1
+                col+=1
 
-            if not elem.isdigit() and elem != "/":
-                
-                img= pygame.image.load(self.get_texture(elem,size=68))
-                img_center = col * SQSIZE + SQSIZE // 2, row * SQSIZE + SQSIZE // 2
-                surface.blit(img,img.get_rect(center=img_center))
-            elif elem == "/":
-                row += 1
-                col = -1
-            col+=1
+            else:
+                if not elem.isdigit() and elem != "/":
+                        img= pygame.image.load(self.get_texture(elem,size=68))
+                        img_center = col * SQSIZE + SQSIZE // 2, row * SQSIZE + SQSIZE // 2
+                        surface.blit(img,img.get_rect(center=img_center))
+                elif elem == "/":
+                    row += 1
+                    col = -1
+                col+=1
 
 
     def get_texture(self, piece,size=68):
