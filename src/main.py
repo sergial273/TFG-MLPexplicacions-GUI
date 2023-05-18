@@ -44,6 +44,8 @@ class Main:
                 elif event.type == pygame.MOUSEMOTION:
                     if dragger.dragging:
                         dragger.update_mouse(event.pos)
+                        game.show_bg(screen)
+                        game.show_pieces(screen,board)
                         dragger.update_blit(screen, game)
         
 
