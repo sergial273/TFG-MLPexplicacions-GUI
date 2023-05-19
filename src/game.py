@@ -1,4 +1,5 @@
 import os
+import sys
 import pygame
 
 from const import *
@@ -19,6 +20,7 @@ class Game:
 
        self.last_move = None
        self.hover_square = None
+       self.font = pygame.font.SysFont('monospace',18,bold=True)
   
     def show_bg(self, surface):
         for row in range(ROWS):
@@ -30,6 +32,35 @@ class Game:
 
                 rect = (col*SQSIZE, row*SQSIZE, SQSIZE, SQSIZE)
                 pygame.draw.rect(surface,color,rect)
+        #marge dret
+        color = (0,0,0) # negre
+        rect = (BOARD_WIDTH, 0, WIDTH-BOARD_WIDTH, BOARD_HEIGHT)
+        pygame.draw.rect(surface, color, rect)
+
+        #text de restart
+        color = (255,255,255)
+        label = self.font.render("Press 'r' --> Reset Game",1,color)
+        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label.get_width())//2, BOARD_HEIGHT//2)
+        surface.blit(label, label_pos)
+
+        #text de vs IA
+        color = (255,255,255)
+        label1 = self.font.render("Press 'a' --> Play vs. IA",1,color)
+        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label1.get_width())//2, BOARD_HEIGHT//2 + label.get_height())
+        surface.blit(label1, label_pos)
+
+        #text de carregar posicio
+        color = (255,255,255)
+        label2 = self.font.render("Press 'l' --> Load FEN position",1,color)
+        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label2.get_width())//2, BOARD_HEIGHT//2 + label.get_height() + label1.get_height())
+        surface.blit(label2, label_pos)
+        
+
+        """#text de evaluar posició
+        color = (255,255,255)
+        label2 = self.font.render(f"Evaluation: {evaluation/100}",1,color)
+        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label2.get_width())//2, BOARD_HEIGHT//2 + label.get_height() + label1.get_height() + label2.get_height() + 20)
+        surface.blit(label2, label_pos)"""
 
     def show_pieces(self,surface, board):
         nboard = board.fen().split()[0]
@@ -118,3 +149,85 @@ class Game:
             rect = (col * SQSIZE, row * SQSIZE, SQSIZE, SQSIZE)
             # blit
             pygame.draw.rect(surface, color, rect, width=5)
+
+    def show_end(self, screen, outcome):
+        message = ""
+
+        if outcome.termination.value == 1:
+            player = "white" if outcome.winner else "black"
+            message = f"CHECKMATE! {player} won!"
+
+        elif outcome.termination.value == 2:
+            message = f"STALEMATE! It's a draw!"
+
+        elif outcome.termination.value == 3:
+            message = f"Draw by insufficient material"
+        
+        elif outcome.termination.value == 4:
+            message = f"It's a draw! 75 moves without a pawn move"
+        
+        elif outcome.termination.value == 5:
+            message = f"Draw by fivefold repetition"
+        
+        else:
+            message = f"It's a draw"
+     
+
+        message2 = "Click RESTART to continue."
+
+        # Set up the font
+        font = pygame.font.SysFont("Arial", 30)
+
+        # Render the message as a surface
+        message_surface = font.render(message, True, (255, 255, 255))
+        message2_surface = font.render(message2, True, (255, 255, 255))
+
+        # Calculate the position of the message
+        message_x = (BOARD_WIDTH - message_surface.get_width()) // 2
+        message_y = (BOARD_HEIGHT - message_surface.get_height()) // 2
+
+        message2_x = (BOARD_WIDTH - message2_surface.get_width()) // 2
+        message2_y = (BOARD_HEIGHT - message2_surface.get_height()) // 2 + message_surface.get_height()
+
+        # Set up the button
+        button_text = "RESTART"
+        button_font = pygame.font.SysFont("Arial", 20)
+        button_surface = button_font.render(button_text, True, (0, 0, 0))
+        button_width = button_surface.get_width() + 10
+        button_height = button_surface.get_height() + 10
+        button_x = (BOARD_WIDTH - button_width) // 2
+        button_y = message_y + message_surface.get_height() + message2_surface.get_height() + 10
+
+        #Set up the backgound
+        length = message_surface.get_width() if message_surface.get_width() > message2_surface.get_width() else message2_surface.get_width()
+        backgorund_width = length + 20
+        background_height = message_surface.get_height() + message2_surface.get_height() + button_height + 50
+        background_x = (BOARD_WIDTH - backgorund_width) // 2
+        background_y = (BOARD_HEIGHT - background_height) // 2 + 25
+
+        # Draw the message and the button onto the screen
+        pygame.draw.rect(screen, (0, 0, 0), (background_x,background_y,backgorund_width,background_height),border_radius=3)
+        screen.blit(message_surface, (message_x, message_y))
+        screen.blit(message2_surface, (message2_x, message2_y))
+        pygame.draw.rect(screen, (208, 67, 67), (button_x, button_y, button_width, button_height), border_radius=3)
+        screen.blit(button_surface, (button_x + 5, button_y + 5))
+
+        # Update the display
+        pygame.display.flip()
+
+        while True:
+            
+            for event in pygame.event.get():
+        
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_x, mouse_y = event.pos
+                    if button_x <= mouse_x <= button_x + button_width and button_y <= mouse_y <= button_y + button_height:
+                        # The player clicked the button, so continue the game
+                        break
+            else:
+                continue
+            break
+
