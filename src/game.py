@@ -45,7 +45,7 @@ class Game:
 
         #text de vs IA
         color = (255,255,255)
-        label1 = self.font.render("Press 'a' --> Play vs. IA",1,color)
+        label1 = self.font.render("Press 'a' --> Analyze move",1,color)
         label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label1.get_width())//2, BOARD_HEIGHT//2 + label.get_height())
         surface.blit(label1, label_pos)
 
