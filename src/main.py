@@ -21,6 +21,7 @@ class Main:
         screen = self.screen
         board = chess.Board()
         dragger = self.game.dragger
+        prev_board = None
 
         while True:
             game.show_bg(screen)
@@ -64,7 +65,6 @@ class Main:
                             game.show_hover(screen)
                             dragger.update_blit(screen, game)
                     
-        
 
                 elif event.type == pygame.MOUSEBUTTONUP:
                     if event.pos[0] <= BOARD_WIDTH or event.pos[1] <= BOARD_HEIGHT:
@@ -83,6 +83,7 @@ class Main:
                             moves = board.legal_moves
                             for a in moves:
                                 if move == a:
+                                    prev_board = board.fen()
                                     board.push(move)
                                     game.last_move = move
                                     outcome = board.outcome()
@@ -95,6 +96,9 @@ class Main:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_r:
                         board.reset()
+                        game.hover_square = None
+                        game.last_move = None
+                        prev_board = None
 
                     if event.key == pygame.K_l:
                         print("Paste FEN position:")
@@ -107,7 +111,11 @@ class Main:
                             testb = board
                         
                         board = testb
-
+                    
+                    if event.key == pygame.K_a:
+                        if prev_board != None:
+                            pass
+                        
 
                 elif event.type == pygame.QUIT:
                     pygame.quit()
