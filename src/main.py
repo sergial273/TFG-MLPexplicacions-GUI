@@ -6,7 +6,7 @@ import pygame.scrap
 
 from const import *
 from game import Game
-from dragger import Dragger
+from explanations import Explanations
 
 class Main:
 
@@ -20,11 +20,12 @@ class Main:
         game = self.game
         screen = self.screen
         board = chess.Board()
+        explanations = Explanations("./stockfish/stockfish-windows-2022-x86-64-avx2")
         dragger = self.game.dragger
         prev_board = None
-
+        exp = ""
         while True:
-            game.show_bg(screen)
+            game.show_bg(screen,exp)
             game.show_last_move(screen)
             game.show_moves(screen,board)
             game.show_pieces(screen,board)
@@ -58,7 +59,7 @@ class Main:
 
                         if dragger.dragging:
                             dragger.update_mouse(event.pos)
-                            game.show_bg(screen)
+                            game.show_bg(screen,exp)
                             game.show_last_move(screen)
                             game.show_moves(screen,board)
                             game.show_pieces(screen,board)
@@ -86,9 +87,15 @@ class Main:
                                     prev_board = board.fen()
                                     board.push(move)
                                     game.last_move = move
+                                    exp = ""
                                     outcome = board.outcome()
                                     if outcome != None:
                                         game.show_end(screen,outcome)
+                                        board.reset()
+                                        game.hover_square = None
+                                        game.last_move = None
+                                        prev_board = None
+                                        exp = ""
                                         
                         dragger.undrag_piece()
                     
@@ -99,6 +106,7 @@ class Main:
                         game.hover_square = None
                         game.last_move = None
                         prev_board = None
+                        exp = ""
 
                     if event.key == pygame.K_l:
                         print("Paste FEN position:")
@@ -114,8 +122,7 @@ class Main:
                     
                     if event.key == pygame.K_a:
                         if prev_board != None:
-                            pass
-                        
+                            exp = explanations.explanations(prev_board,board.fen())
 
                 elif event.type == pygame.QUIT:
                     pygame.quit()

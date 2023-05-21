@@ -22,7 +22,7 @@ class Game:
        self.hover_square = None
        self.font = pygame.font.SysFont('monospace',18,bold=True)
   
-    def show_bg(self, surface):
+    def show_bg(self, surface, explication = ""):
         for row in range(ROWS):
             for col in range(COLS):
                 if (row+col) % 2 == 0:
@@ -36,31 +36,40 @@ class Game:
         color = (0,0,0) # negre
         rect = (BOARD_WIDTH, 0, WIDTH-BOARD_WIDTH, BOARD_HEIGHT)
         pygame.draw.rect(surface, color, rect)
+        offset = 150
 
         #text de restart
         color = (255,255,255)
         label = self.font.render("Press 'r' --> Reset Game",1,color)
-        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label.get_width())//2, BOARD_HEIGHT//2)
+        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label.get_width())//2, BOARD_HEIGHT//2 + offset)
         surface.blit(label, label_pos)
 
         #text de vs IA
         color = (255,255,255)
         label1 = self.font.render("Press 'a' --> Analyze move",1,color)
-        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label1.get_width())//2, BOARD_HEIGHT//2 + label.get_height())
+        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label1.get_width())//2, BOARD_HEIGHT//2 + label.get_height() + offset)
         surface.blit(label1, label_pos)
 
         #text de carregar posicio
         color = (255,255,255)
         label2 = self.font.render("Press 'l' --> Load FEN position",1,color)
-        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label2.get_width())//2, BOARD_HEIGHT//2 + label.get_height() + label1.get_height())
+        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label2.get_width())//2, BOARD_HEIGHT//2 + label.get_height() + label1.get_height() + offset)
         surface.blit(label2, label_pos)
         
 
-        """#text de evaluar posició
+        #text de explicar posició posició
         color = (255,255,255)
-        label2 = self.font.render(f"Evaluation: {evaluation/100}",1,color)
-        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label2.get_width())//2, BOARD_HEIGHT//2 + label.get_height() + label1.get_height() + label2.get_height() + 20)
-        surface.blit(label2, label_pos)"""
+        if explication != "":
+            frase = explication[2] + "\n\n" + explication[0] +"\n"+explication[1]
+            
+        else:
+            frase = ""
+        #label3 = self.font.render(frase,1,color)
+        label_pos = (BOARD_WIDTH + 50, BOARD_HEIGHT//2 - 100)
+        #surface.blit(label2, label_pos)
+
+        blit_text(surface, frase, label_pos, self.font, color)
+        
 
     def show_pieces(self,surface, board):
         nboard = board.fen().split()[0]
@@ -231,3 +240,19 @@ class Game:
                 continue
             break
 
+def blit_text(surface, text, pos, font, color=pygame.Color('black')):
+    words = [word.split(' ') for word in text.splitlines()]  # 2D array where each row is a list of words.
+    space = font.size(' ')[0]  # The width of a space.
+    max_width, max_height = surface.get_size()
+    x, y = pos
+    for line in words:
+        for word in line:
+            word_surface = font.render(word, 0, color)
+            word_width, word_height = word_surface.get_size()
+            if x + word_width >= max_width:
+                x = pos[0]  # Reset the x.
+                y += word_height  # Start on new row.
+            surface.blit(word_surface, (x, y))
+            x += word_width + space
+        x = pos[0]  # Reset the x.
+        y += word_height  # Start on new row.
