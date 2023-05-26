@@ -145,44 +145,89 @@ class Explanations:
 			if (difW > 0 and difB>0) or (difW >= 0 and difB>0) or (difW > 0 and difB>=0):
 				if difW > difB:
 					if fen1.split()[1] == "w":
-						frase_expl2 = frase_expl2 + "a més, has aconseguit restringir els moviments del rival augmentant els teus. "
+							if difB == 0:
+								frase_expl2 = frase_expl2 + "a més, has augmentat els teus moviments possibles respecte a la posició anterior sense afectar els del rival. "
+							else:
+								frase_expl2 = frase_expl2 + "a més, has augmentat els teus moviments possibles respecte a la posició anterior i, en menor mesura, els del rival. "
 					else:
-						frase_expl2 = frase_expl2 + "però, has restringit els teus moviments i has augmentat els del rival. "
+						if difB == 0:
+								frase_expl2 = frase_expl2 + "però, has augmentat els moviments possibles del rival respecte a la posició anterior sense afectar els teus. "
+						else:
+								frase_expl2 = frase_expl2 + "a més, has augmentat els teus moviments possibles respecte a la posició anterior, però, encara més els del teu rival. "
 				elif difW < difB:
 					if fen1.split()[1] == "w":
-						frase_expl2 = frase_expl2 + "però, has restringit els teus moviments i has augmentat els del rival. "
+						if difW == 0:
+								frase_expl2 = frase_expl2 + "però, has augmentat els moviments possibles del rival respecte a la posició anterior sense afectar els teus. "
+						else:
+								frase_expl2 = frase_expl2 + "a més, has augmentat els teus moviments possibles respecte a la posició anterior, però, encara més els del teu rival. "
 					else:
-						frase_expl2 = frase_expl2 + "a més, has aconseguit restringir els moviments del rival augmentant els teus. "
+						if difW == 0:
+								frase_expl2 = frase_expl2 + "a més, has augmentat els teus moviments possibles respecte a la posició anterior sense afectar els del rival. "
+						else:
+								frase_expl2 = frase_expl2 + "a més, has augmentat els teus moviments possibles respecte a la posició anterior i, en menor mesura, els del rival. "
 				elif difW == difB:
 						frase_expl2 = frase_expl2 + "has augmentat els teus moviments, però també els del rival. "
 
 			elif (difW < 0 and difB < 0) or (difW <= 0 and difB < 0) or (difW < 0 and difB <= 0):
 				if difW > difB:
 					if fen1.split()[1] == "w":
-						frase_expl2 = frase_expl2 + "a més, tot i restringir els teus moviments, has restringit encara més els del rival. "
+						if difW == 0:
+							frase_expl2 = frase_expl2 + "a més, has restringit els moviments del teu rival. "
+						else:
+							frase_expl2 = frase_expl2 + "a més, tot i restringir els teus moviments, has restringit encara més els del rival. "
 					else:
-						frase_expl2 = frase_expl2 + "però, tot i restringir els moviments del rival, has restringit encara més els teus. "
+						if difW == 0:
+							frase_expl2 = frase_expl2 + "però, has restringit els teus moviments, sense afectar els del rival. "
+						else:
+							frase_expl2 = frase_expl2 + "però, tot i restringir els moviments possibles del rival, has restringit encara més els teus. "
+
 				elif difW < difB:
 					if fen1.split()[1] == "w":
-						frase_expl2 = frase_expl2 + "però, tot i restringir els moviments del rival, has restringit encara més els teus. "
-
+						if difB == 0:
+							frase_expl2 = frase_expl2 + "però, has restringit els teus moviments, sense afectar els del rival. "
+						else:
+							frase_expl2 = frase_expl2 + "però, tot i restringir els moviments possibles del rival, has restringit encara més els teus. "
 					else:
-						frase_expl2 = frase_expl2 + "a més, tot i restringir els teus moviments, has restringit encara més els del rival. "
+						if difB == 0:
+							frase_expl2 = frase_expl2 + "a més, has restringit els moviments del teu rival. "
+						else:
+							frase_expl2 = frase_expl2 + "a més, tot i restringir els teus moviments, has restringit encara més els del rival. "
 				elif difW == difB:
-						frase_expl2 = frase_expl2 + "has restringit tant els teus moviments com els del rival. "
+						frase_expl2 = frase_expl2 + "has restringit tant els teus moviments com els del rival d'igual manera. "
 
 			elif (difW > 0 and difB < 0) or (difW >= 0 and difB < 0) or (difW > 0 and difB <= 0):
 				if fen1.split()[1] == "w":
-					frase_expl2 = frase_expl2 + "a més, has aconseguit restringir els moviments del rival augmentant els teus. "
+					if difW == 0:
+						frase_expl2 = frase_expl2 + "a més, has aconseguit restringir els moviments del rival. "
+					elif difB == 0:
+						frase_expl2 = frase_expl2 + "a més, has aconseguit augmentar els teus moviments possibles sense afectar els del rival. "
+					else:
+						frase_expl2 = frase_expl2 + "a més, has aconseguit restringir els moviments del rival augmentant els teus. "
+					
 				else:
-					frase_expl2 = frase_expl2 + "però, has restringit els teus moviments i has augmentat els del rival. "
+					if difW == 0:
+						frase_expl2 = frase_expl2 + "però, has restringit els teus moviments possibles sense afectar els del rival. "
+					elif difB == 0:
+						frase_expl2 = frase_expl2 + "però, has augmentat els moviments del teu rival sense afectar els teus. "
+					else:
+						frase_expl2 = frase_expl2 + "però, has restringit els teus moviments possibles augmentant els del teu rival. "
 
 			elif (difW < 0 and difB>0) or (difW <= 0 and difB>0) or (difW < 0 and difB >= 0):
 				if fen1.split()[1] == "w":
-					frase_expl2 = frase_expl2 + "però, has restringit els teus moviments i has augmentat els del rival. "
+					if difB == 0:
+						frase_expl2 = frase_expl2 + "però, has restringit els teus moviments possibles sense afectar els del rival. "
+					elif difW == 0:
+						frase_expl2 = frase_expl2 + "però, has augmentat els moviments del teu rival sense afectar els teus. "
+					else:
+						frase_expl2 = frase_expl2 + "però, has restringit els teus moviments possibles augmentant els del teu rival. "
 				else:
-					frase_expl2 = frase_expl2 + "a més, has aconseguit restringir els moviments del rival augmentant els teus. "
-
+					if difB == 0:
+						frase_expl2 = frase_expl2 + "a més, has aconseguit restringir els moviments del rival. "
+					elif difW == 0:
+						frase_expl2 = frase_expl2 + "a més, has aconseguit augmentar els teus moviments possibles sense afectar els del rival. "
+					else:
+						frase_expl2 = frase_expl2 + "a més, has aconseguit restringir els moviments del rival augmentant els teus. "
+						
 			elif difW == 0 and difB == 0:
 					frase_expl2 = frase_expl2 + "aquest moviment no afecta a la llibertat de moviment de la resta de peces. "
 
