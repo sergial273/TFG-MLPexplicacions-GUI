@@ -24,19 +24,25 @@ class Main:
         dragger = self.game.dragger
         prev_board = None
         exp = ""
+        vs_ia = False
         while True:
-            game.show_bg(screen,exp)
+            game.show_bg(screen,vs_ia,explication=exp)
             game.show_last_move(screen)
             game.show_moves(screen,board)
             game.show_pieces(screen,board)
             game.show_hover(screen)
 
+            if not vs_ia and not board.turn:
+                    explanations.set_fen_position(board.fen())
+                    explanations.make_moves_from_current_position(explanations.get_best_move())
+                    board = chess.Board(explanations.get_fen_position())
+                    
             if dragger.dragging:
                 dragger.update_blit(screen,game)
-
+            
             for event in pygame.event.get():
-
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_x, mouse_y = event.pos
                     if event.pos[0] <= BOARD_WIDTH and event.pos[1] <= BOARD_HEIGHT:
                         
                         dragger.update_mouse(event.pos)
@@ -48,7 +54,8 @@ class Main:
                             piece = board.piece_at(56+clicked_col-8*clicked_row)
                             dragger.save_initial(event.pos)
                             dragger.drag_piece(piece.symbol())
-                    
+                    elif self.game.button_ia_x <= mouse_x <= self.game.button_ia_x + self.game.button_ia_width and self.game.button_ia_y <= mouse_y <= self.game.button_ia_y + self.game.button_ia_height:
+                        vs_ia = not vs_ia
                 
                 elif event.type == pygame.MOUSEMOTION:
                     if event.pos[0] <= BOARD_WIDTH or event.pos[1] <= BOARD_HEIGHT:
@@ -59,7 +66,7 @@ class Main:
 
                         if dragger.dragging:
                             dragger.update_mouse(event.pos)
-                            game.show_bg(screen,exp)
+                            game.show_bg(screen,vs_ia,explication=exp)
                             game.show_last_move(screen)
                             game.show_moves(screen,board)
                             game.show_pieces(screen,board)
@@ -127,7 +134,6 @@ class Main:
                 elif event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-
 
             pygame.display.update()
 

@@ -21,8 +21,12 @@ class Game:
        self.last_move = None
        self.hover_square = None
        self.font = pygame.font.SysFont('monospace',18,bold=True)
+       self.button_ia_x = 0
+       self.button_ia_y = 0
+       self.button_ia_width = 0
+       self.button_ia_height = 0
   
-    def show_bg(self, surface, explication = ""):
+    def show_bg(self, surface, ia, explication = ""):
         for row in range(ROWS):
             for col in range(COLS):
                 if (row+col) % 2 == 0:
@@ -37,14 +41,14 @@ class Game:
         rect = (BOARD_WIDTH, 0, WIDTH-BOARD_WIDTH, BOARD_HEIGHT)
         pygame.draw.rect(surface, color, rect)
         offset = 150
-
+    
         #text de restart
         color = (255,255,255)
         label = self.font.render("Press 'r' --> Reset Game",1,color)
         label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label.get_width())//2, BOARD_HEIGHT//2 + offset)
         surface.blit(label, label_pos)
 
-        #text de vs IA
+        #text de analitzar posició
         color = (255,255,255)
         label1 = self.font.render("Press 'a' --> Analyze move",1,color)
         label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label1.get_width())//2, BOARD_HEIGHT//2 + label.get_height() + offset)
@@ -55,7 +59,28 @@ class Game:
         label2 = self.font.render("Press 'l' --> Load FEN position",1,color)
         label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label2.get_width())//2, BOARD_HEIGHT//2 + label.get_height() + label1.get_height() + offset)
         surface.blit(label2, label_pos)
-        
+
+        # Botó de vs ia
+        if ia:
+            button_text = "Playing Vs. IA"
+            button_font = pygame.font.SysFont("Arial", 20)
+            button_surface = button_font.render(button_text, True, (0, 0, 0))
+            self.button_ia_width = button_surface.get_width() + 10
+            self.button_ia_height = button_surface.get_height() + 10
+            self.button_ia_x = WIDTH - (self.button_ia_width + 50) 
+            self.button_ia_y = 10+self.button_ia_height
+            pygame.draw.rect(surface, (0, 0, 255), (self.button_ia_x, self.button_ia_y, self.button_ia_width, self.button_ia_height), border_radius=3)
+        else:
+            button_text = "Playing Vs. Human"
+            button_font = pygame.font.SysFont("Arial", 20)
+            button_surface = button_font.render(button_text, True, (0, 0, 0))
+            self.button_ia_width = button_surface.get_width() + 10
+            self.button_ia_height = button_surface.get_height() + 10
+            self.button_ia_x = WIDTH - (self.button_ia_width + 50) 
+            self.button_ia_y = 10+self.button_ia_height
+            pygame.draw.rect(surface, (255, 0, 0), (self.button_ia_x, self.button_ia_y, self.button_ia_width, self.button_ia_height), border_radius=3)
+            
+        surface.blit(button_surface, (self.button_ia_x + 5, self.button_ia_y + 5))
 
         #text de explicar posició posició
         color = (255,255,255)
@@ -64,10 +89,9 @@ class Game:
             
         else:
             frase = ""
-        #label3 = self.font.render(frase,1,color)
-        label_pos = (BOARD_WIDTH + 50, BOARD_HEIGHT//2 - 100)
-        #surface.blit(label2, label_pos)
 
+        label_pos = (BOARD_WIDTH + 50, BOARD_HEIGHT//2 - 100)
+        
         blit_text(surface, frase, label_pos, self.font, color)
         
 
