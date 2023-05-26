@@ -8,6 +8,8 @@ from const import *
 from game import Game
 from explanations import Explanations
 
+from stockfish import Stockfish
+
 class Main:
 
     def __init__(self):
@@ -21,6 +23,7 @@ class Main:
         screen = self.screen
         board = chess.Board()
         explanations = Explanations("./stockfish/stockfish-windows-2022-x86-64-avx2")
+        stockfish = Stockfish(path="./stockfish/stockfish-windows-2022-x86-64-avx2")
         dragger = self.game.dragger
         prev_board = None
         exp = ""
@@ -32,11 +35,17 @@ class Main:
             game.show_pieces(screen,board)
             game.show_hover(screen)
 
-            if not vs_ia and not board.turn:
-                    explanations.set_fen_position(board.fen())
-                    explanations.make_moves_from_current_position(explanations.get_best_move())
-                    board = chess.Board(explanations.get_fen_position())
-                    
+            if vs_ia and not board.turn:
+                prev_board = board.fen()
+                stockfish.set_fen_position(board.fen())
+                move = stockfish.get_best_move()
+                ini = move[0:2].upper()
+                fin = move[2:4].upper()
+                game.last_move = chess.Move(eval(f"chess.{ini}"), eval(f"chess.{fin}")) 
+                stockfish.make_moves_from_current_position([move])
+                board = chess.Board(stockfish.get_fen_position())
+                
+
             if dragger.dragging:
                 dragger.update_blit(screen,game)
             
@@ -56,6 +65,11 @@ class Main:
                             dragger.drag_piece(piece.symbol())
                     elif self.game.button_ia_x <= mouse_x <= self.game.button_ia_x + self.game.button_ia_width and self.game.button_ia_y <= mouse_y <= self.game.button_ia_y + self.game.button_ia_height:
                         vs_ia = not vs_ia
+                        board.reset()
+                        game.hover_square = None
+                        game.last_move = None
+                        prev_board = None
+                        exp = ""
                 
                 elif event.type == pygame.MOUSEMOTION:
                     if event.pos[0] <= BOARD_WIDTH or event.pos[1] <= BOARD_HEIGHT:
