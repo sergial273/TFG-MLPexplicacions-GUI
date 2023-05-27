@@ -28,20 +28,40 @@ class Main:
         prev_board = None
         exp = ""
         vs_ia = False
+        eval_board = None
+        eval = None
         while True:
-            game.show_bg(screen,vs_ia,explication=exp)
+            if eval_board != board.fen():
+                eval_board = board.fen()
+                stockfish.set_fen_position(eval_board)
+                eval = stockfish.get_evaluation()
+
+
+            game.show_bg(screen,vs_ia,eval,explication=exp)
             game.show_last_move(screen)
             game.show_moves(screen,board)
             game.show_pieces(screen,board)
             game.show_hover(screen)
 
+            if vs_ia:
+                outcome = board.outcome()
+                if outcome != None:
+                    game.show_end(screen,outcome)
+                    board.reset()
+                    game.hover_square = None
+                    game.last_move = None
+                    prev_board = None
+                    exp = ""
+                    
             if vs_ia and not board.turn:
                 prev_board = board.fen()
                 stockfish.set_fen_position(board.fen())
                 move = stockfish.get_best_move()
-                ini = move[0:2].upper()
-                fin = move[2:4].upper()
-                game.last_move = chess.Move(eval(f"chess.{ini}"), eval(f"chess.{fin}")) 
+                ini = move[0:2]
+                fin = move[2:4]
+                move = chess.Move.from_uci(ini + fin)
+                
+                game.last_move = move
                 stockfish.make_moves_from_current_position([move])
                 board = chess.Board(stockfish.get_fen_position())
                 
@@ -70,6 +90,7 @@ class Main:
                         game.last_move = None
                         prev_board = None
                         exp = ""
+                        eval_board = None
                 
                 elif event.type == pygame.MOUSEMOTION:
                     if event.pos[0] <= BOARD_WIDTH or event.pos[1] <= BOARD_HEIGHT:
@@ -80,7 +101,7 @@ class Main:
 
                         if dragger.dragging:
                             dragger.update_mouse(event.pos)
-                            game.show_bg(screen,vs_ia,explication=exp)
+                            game.show_bg(screen,vs_ia,eval,explication=exp)
                             game.show_last_move(screen)
                             game.show_moves(screen,board)
                             game.show_pieces(screen,board)
@@ -128,6 +149,7 @@ class Main:
                         game.last_move = None
                         prev_board = None
                         exp = ""
+                        eval_board = None
 
                     if event.key == pygame.K_l:
                         print("Paste FEN position:")

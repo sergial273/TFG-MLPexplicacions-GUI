@@ -26,7 +26,7 @@ class Game:
        self.button_ia_width = 0
        self.button_ia_height = 0
   
-    def show_bg(self, surface, ia, explication = ""):
+    def show_bg(self, surface, ia, eval, explication = ""):
         for row in range(ROWS):
             for col in range(COLS):
                 if (row+col) % 2 == 0:
@@ -41,23 +41,30 @@ class Game:
         rect = (BOARD_WIDTH, 0, WIDTH-BOARD_WIDTH, BOARD_HEIGHT)
         pygame.draw.rect(surface, color, rect)
         offset = 150
-    
+
+        
+        #text de eval
+        color = (255,255,255)
+        label0 = self.font.render("Evaluació: "+eval["type"].upper()+": "+str(eval["value"]),1,color)
+        label_pos0 = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label0.get_width())//2, BOARD_HEIGHT//2 + offset)
+        surface.blit(label0, label_pos0)
+        
         #text de restart
         color = (255,255,255)
         label = self.font.render("Press 'r' --> Reset Game",1,color)
-        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label.get_width())//2, BOARD_HEIGHT//2 + offset)
+        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label.get_width())//2, BOARD_HEIGHT//2 + label0.get_height() + offset)
         surface.blit(label, label_pos)
 
         #text de analitzar posició
         color = (255,255,255)
         label1 = self.font.render("Press 'a' --> Analyze move",1,color)
-        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label1.get_width())//2, BOARD_HEIGHT//2 + label.get_height() + offset)
+        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label1.get_width())//2, BOARD_HEIGHT//2 + label.get_height() + label0.get_height() + offset)
         surface.blit(label1, label_pos)
 
         #text de carregar posicio
         color = (255,255,255)
         label2 = self.font.render("Press 'l' --> Load FEN position",1,color)
-        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label2.get_width())//2, BOARD_HEIGHT//2 + label.get_height() + label1.get_height() + offset)
+        label_pos = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label2.get_width())//2, BOARD_HEIGHT//2 + label.get_height() + label1.get_height() + label0.get_height() + offset)
         surface.blit(label2, label_pos)
 
         # Botó de vs ia
