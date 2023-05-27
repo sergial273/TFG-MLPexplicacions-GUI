@@ -45,7 +45,7 @@ class Game:
         
         #text de eval
         color = (255,255,255)
-        label0 = self.font.render("Evaluació: "+eval["type"].upper()+": "+str(eval["value"]),1,color)
+        label0 = self.font.render("Evaluation: "+eval["type"].upper()+": "+str(eval["value"]),1,color)
         label_pos0 = (BOARD_WIDTH + ((WIDTH-BOARD_WIDTH)-label0.get_width())//2, BOARD_HEIGHT//2 + offset)
         surface.blit(label0, label_pos0)
         
