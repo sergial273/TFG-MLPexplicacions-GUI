@@ -4,7 +4,7 @@ This is my end of degree project for Informatics Engineering.
 
 ## Description
 
-This project is the creation and design of a GUI for the [MultiLayer Perceptron (MLP)] (https://github.com/sergial273/TFG-Perceptro) which is trained to get a before and after position of a move in chess and outputs its evaluation and some explanation on why it's a good/bad move.
+This project is the creation and design of a GUI for the [MultiLayer Perceptron project] (https://github.com/sergial273/TFG-Perceptro) which is trained to get a before and after position of a move in chess and outputs its evaluation and some explanation on why it's a good/bad move.
 In the project you can find an interface to play games against other human or against an AI, you can upload any FEN position via command line, and you can at any moment evaluation the move with the MLP created.
 
 ## Getting Started
