@@ -1,4 +1,0 @@
--arreglat text error restricció de moviments - comprobar si millora coherencia
-
-FALTA:
--Afegir rival
